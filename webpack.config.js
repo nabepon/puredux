@@ -1,48 +1,58 @@
+'use strict'
+
 var path = require('path');
 var webpack = require('webpack');
+var env = process.env.NODE_ENV;
 
-module.exports = {
-  entry: {
-    vendor: ['redux'],
-    bundle: ['./src/index.js'],
-  },
-
+var config = {
   output: {
-    path: path.join(__dirname, 'dist/assets'), // Must be an absolute path
-    filename: '[name].js',
-    publicPath: '/assets'
+    library: 'Puredux',
+    libraryTarget: 'umd'
   },
 
   module: {
     loaders: [{
       test: /\.js$/,
       loader: 'babel',
-      include: [
-        path.join(__dirname, 'src'),
-      ],
       exclude: [
         /node_modules/,
       ],
     }]
   },
 
-  resolve: {
-    modulesDirectories: [
-      'src',
-      'node_modules',
-    ]
-  },
-
-  devtool: 'source-map',
-
-  devServer: {
-    contentBase: 'dist',
-    port: 3000
-  },
-
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.js', 2),
-    new webpack.optimize.UglifyJsPlugin(),
+    new webpack.optimize.OccurrenceOrderPlugin(),
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(env)
+    })
   ]
 };
+
+if (env === 'production') {
+  config.plugins.push(
+    new webpack.optimize.UglifyJsPlugin({
+      compressor: {
+        pure_getters: true,
+        unsafe: true,
+        unsafe_comps: true,
+        warnings: false,
+        screw_ie8: false
+      },
+      mangle: {
+        screw_ie8: false
+      },
+      output: {
+        screw_ie8: false
+      }
+    })
+  )
+}
+
+if(env === 'development') {
+  config.plugins.push(
+    new webpack.HotModuleReplacementPlugin()
+  );
+  config.devtool = 'inline-source-map';
+}
+
+module.exports = config;
