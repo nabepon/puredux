@@ -18,27 +18,27 @@ export default class Component extends Puredux.Component {
     }
   }
 
-  attachChildren() {
-    this.children = {
-      child: new Child(),
+  attachChildren(props) {
+    return {
+      child: new Child()
     };
   }
 
-  renderChildren() {
-    const props = this.props;
-    this.children.child.render(props);
+  updateRender(props) {
+    this.el.innerHTML = this.template(props);
+    this.$('.child-container').appendChild( this.children.child.render(props).el );
+    for(let i=0; i<10; i++){
+      this.$('.child-container').appendChild( new Child().render(props).el );
+    }
   }
 
-  appendChildren() {
-    this.swapElement(".child-container", this.children.child.el);
-  }
-
-  renderSelf(props) {
-    this.el.innerHTML = `
-      <div>${props.count}</div>
+  createTemplate() {
+    return `
+      <div class="count"><%= count %></div>
       <button class="js-increment">increment</button>
       <button class="js-decrement">decrement</button>
       <div class="child-container"></div>
     `;
   }
+
 }

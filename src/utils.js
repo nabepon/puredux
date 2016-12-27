@@ -1,66 +1,61 @@
+const ObjectKeys = Object.keys;
+
 export function mapDispatchToActions(dispatch, actions){
   const ret = {};
-  Object.keys(actions).map((key)=>{
-    const action = actions[key];
-    if (typeof action === 'function') {
+  ObjectKeys(actions).map((key)=>{
+    if (typeof actions[key] === 'function') {
       ret[key] = function(){
-        dispatch(action(...arguments));
+        dispatch(actions[key].apply(null, arguments));
       };
     }
   });
   return ret;
 }
 
-function isObject(target) {
-  return target !== null && typeof target === 'object' && !Array.isArray(target);
+export function shouldComponentUpdate(objA, objB){
+  return !recurseEqual(objA, objB, 1);
 }
 
-function diffKey(keys1, keys2){
-  return false;
-  for(const i in keys1){
-    if(!keys2.includes( keys1[i] )){
-      return true;
-    }
-  }
-}
-
-function diffProp(keys, beginProps, currentProps){
-  for(const i in keys){
-    if(beginProps[keys[i]] !== currentProps[keys[i]]){
-      return true;
-    }
-  }
-  return false;
-}
-
-export function shouldComponentUpdate(beginProps, currentProps){
-  if(!isObject(beginProps) || !isObject(currentProps)){
-    return beginProps === currentProps;
-  }
-
-  const beginKeys = Object.keys(beginProps);
-  const currentKeys = Object.keys(currentProps);
-  if(
-    diffKey(beginKeys, currentKeys) ||
-    diffKey(currentKeys, beginKeys) ||
-    diffProp(beginKeys, beginProps, currentProps)
-  ){
+export function recurseEqual(objA, objB, recurseCount) {
+  if(objA === objB){
     return true;
   }
 
-  return false;
+  if(typeof objA !== 'object' || objA === null ||
+    typeof objB !== 'object' || objB === null){
+    return objA === objB;
+  }
+
+  const keysB = ObjectKeys(objB);
+  const keysA = ObjectKeys(objA);
+
+  if(keysA.length !== keysB.length){
+    return false;
+  }
+
+  for(let i = 0; i < keysB.length; i++){
+    if(!objA.hasOwnProperty(keysB[i])){
+      return false;
+    }
+
+    if(recurseCount && !recurseEqual(objA[keysB[i]], objB[keysB[i]], recurseCount - 1)){
+      return false;
+    }
+
+    if(objA[keysB[i]] !== objB[keysB[i]]){
+      return false;
+    }
+  }
+
+  return true;
 }
 
 export function recurseObject(obj, checkObj, iteratee){
-  if(obj === null || typeof obj !== 'object'){
+  if(typeof obj !== 'object' || obj === null){
     return iteratee(obj);
   }
 
-  if(Array.isArray(obj)){
-    return obj.map(item => recurseObject(obj, checkObj, iteratee));
-  }
-
-  Object.keys(obj).map(key => {
+  ObjectKeys(obj).map(key => {
     if(checkObj && checkObj(obj[key])){
       obj[key] = iteratee(obj[key]);
     }else{
@@ -69,4 +64,12 @@ export function recurseObject(obj, checkObj, iteratee){
   });
 
   return obj;
+}
+
+export function swapElement(selfEl, selector, el) {
+  const target = selfEl.querySelector(selector);
+  if(target) {
+    target.parentNode.insertBefore(el, target);
+    selfEl.removeChild(target);
+  }
 }

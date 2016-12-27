@@ -1,9 +1,17 @@
 import Component from './Component';
-import { mapDispatchToActions, shouldComponentUpdate, recurseObject } from './utils';
+import createComponent from './createComponent';
+import createTemplate from './createTemplate';
+import setConfig from './setConfig';
+import { mapDispatchToActions, shouldComponentUpdate, recurseEqual, recurseObject, swapElement } from './utils';
 
 export {
   Component,
+  setConfig,
+  createComponent,
+  createTemplate,
   mapDispatchToActions,
   shouldComponentUpdate,
-  recurseObject
+  recurseEqual,
+  recurseObject,
+  swapElement
 };
