@@ -18,9 +18,9 @@ var Child = Puredux.Component.extend({
   },
 
   createTemplate: function() {
-    return `
-      <div class="count"><%= count %></div>
-    `
+    return '\
+      <div class="count"><%= count %></div>\
+      '
   },
 });
 
@@ -35,7 +35,7 @@ var Component = Puredux.Component.extend({
   },
 
   onClick: function(e){
-    const props = this.props;
+    var props = this.props;
     if(utils.hasClass(e, "js-increment")){
       this.actions.increment(props.count);
     }
@@ -59,12 +59,12 @@ var Component = Puredux.Component.extend({
   },
 
   createTemplate: function() {
-    return `
-        <div class="count"><%= count %></div>
-        <button class="js-increment">increment</button>
-        <button class="js-decrement">decrement</button>
-        <div class="child-container"></div>
-      `;
+    return '\
+      <div class="count"><%= count %></div>\
+      <button class="js-increment">increment</button>\
+      <button class="js-decrement">decrement</button>\
+      <div class="child-container"></div>\
+    ';
   },
 });
 
@@ -75,7 +75,7 @@ var Component = Puredux.Component.extend({
 var Actions = (function(){
 
   //-----------------------------------------
-  // Constant
+  // varant
   //-----------------------------------------
   var INCREMENT = 'INCREMENT';
   var DECREMENT = 'DECREMENT';
@@ -156,7 +156,7 @@ var App = (function(){
 
   Class.prototype = {
     init: function(){
-      const _this = this;
+      var _this = this;
       this.store = Redux.createStore(reducer, {});
       Puredux.setConfig({dispatch: this.store.dispatch});
       this.el = document.querySelector('#app');
@@ -165,7 +165,7 @@ var App = (function(){
     },
 
     changePage: function(pageComponent, renderPage) {
-      const prevComponent = this.component;
+      var prevComponent = this.component;
       this.render = renderPage;
       this.component = pageComponent;
       this.render();
@@ -174,7 +174,7 @@ var App = (function(){
     },
 
     counterPage: function(){
-      this.changePage(new Component(), ()=>{
+      this.changePage(new Component(), function(){
         this.component.render(this.store.getState().counter);
       });
     }
