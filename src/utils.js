@@ -16,6 +16,9 @@ export function shouldComponentUpdate(objA, objB){
   return !recurseEqual(objA, objB, 1);
 }
 
+/**
+ * Modified from https://github.com/facebook/fbjs/blob/master/packages/fbjs/src/core/shallowEqual.js
+ */
 export function recurseEqual(objA, objB, recurseCount) {
   if(objA === objB){
     return true;
