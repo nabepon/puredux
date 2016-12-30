@@ -4,8 +4,9 @@ import {mapDispatchToActions, shouldComponentUpdate, recurseObject} from './util
 export default class Component {
   constructor(option) {
     const _this = this;
+    _this.initialize.bind(_this).apply(_this, arguments);
     _this.isPureduxComponent = true;
-    _this.el = document.createElement(option && option.tagName || _this.tagName);
+    _this.el = document.createElement(option && option.tagName || _this.tagName || 'div');
     _this.option = option;
     _this.__isMountRender = true;
     _this.onClick = _this.onClick ? _this.onClick.bind(_this) : null;
@@ -33,6 +34,7 @@ export default class Component {
   enableThisReference = false;
   renderChildrenDependsOnParent = false;
   shouldComponentUpdate = shouldComponentUpdate;
+  initialize() {}
   componentWillMount() {}
   componentWillUpdate() {}
   componentDidMount() {}
@@ -121,3 +123,12 @@ export default class Component {
     return _this;
   }
 }
+
+Component.extend = function extend(config){
+  var Class = function(){
+    Class.prototype.__proto__ = Component.prototype;
+    Component.apply(this, arguments);
+  };
+  Class.prototype = config;
+  return Class;
+};
