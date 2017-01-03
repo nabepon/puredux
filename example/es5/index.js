@@ -46,15 +46,18 @@ var Component = Puredux.Component.extend({
 
   attachChildren: function(props) {
     return {
-      child: new Child()
+      child: new Child(),
+      list: [1,2,3,4,5].map(function(){
+        return new Child();
+      })
     };
   },
 
   updateRender: function(props) {
     this.el.innerHTML = this.template(props);
     this.$('.child-container').appendChild( this.children.child.render(props).el );
-    for(let i=0; i<10; i++){
-      this.$('.child-container').appendChild( new Child().render(props).el );
+    for(var i in this.children.list){
+      this.$('.child-container').appendChild( this.children.list[i].render(props).el );
     }
   },
 

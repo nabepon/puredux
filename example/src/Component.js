@@ -20,16 +20,17 @@ export default class Component extends Puredux.Component {
 
   attachChildren(props) {
     return {
-      child: new Child()
+      child: new Child(),
+      list: [...Array(5)].map(() => new Child()),
     };
   }
 
   updateRender(props) {
     this.el.innerHTML = this.template(props);
     this.$('.child-container').appendChild( this.children.child.render(props).el );
-    for(let i=0; i<10; i++){
-      this.$('.child-container').appendChild( new Child().render(props).el );
-    }
+    this.children.list.map(item => {
+      this.$('.child-container').appendChild( item.render(props).el );
+    });
   }
 
   createTemplate() {

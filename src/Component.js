@@ -1,5 +1,5 @@
 import createTemplate from './createTemplate';
-import {mapDispatchToActions, shouldComponentUpdate, recurseObject} from './utils';
+import {mapDispatchToActions, shallowCompare, recurseObject} from './utils';
 
 export default class Component {
   constructor(option) {
@@ -8,7 +8,7 @@ export default class Component {
     _this.isPureduxComponent = true;
     _this.el = document.createElement(option && option.tagName || _this.tagName || 'div');
     _this.option = option;
-    _this.__isMountRender = true;
+    _this.__isFirstRender = true;
     _this.onClick = _this.onClick ? _this.onClick.bind(_this) : null;
     _this.renderSuper = _this.render;
     return _this;
@@ -33,7 +33,8 @@ export default class Component {
   prevProps = null;
   enableThisReference = false;
   renderChildrenDependsOnParent = false;
-  shouldComponentUpdate = shouldComponentUpdate;
+  shallowCompare = shallowCompare;
+  shouldComponentUpdate = ()=>true;
   initialize() {}
   componentWillMount() {}
   componentWillUpdate() {}
@@ -75,12 +76,12 @@ export default class Component {
 
   render(nextProps) {
     const _this = this;
-    const isMountRender = _this.__isMountRender;
+    const isFirstRender = _this.__isFirstRender;
     const prevProps = _this.prevProps;
     _this.prevProps = prevProps;
     _this.props = nextProps;
 
-    if(isMountRender){
+    if(isFirstRender){
       if(_this.onClick){
         _this.el.addEventListener('click', _this.onClick, false);
       }
@@ -88,17 +89,18 @@ export default class Component {
       _this.children = _this.attachChildren(nextProps) || {};
       _this.componentWillMount();
     }
-    _this.componentWillUpdate(isMountRender);
+    _this.componentWillUpdate(isFirstRender);
 
-    if(isMountRender || _this.shouldComponentUpdate(prevProps, nextProps)){
-      _this.__isMountRender = false;
-      _this.updateRender(nextProps);
+    if(isFirstRender || _this.shouldComponentUpdate(prevProps, nextProps)){
+      _this.updateRender(nextProps, prevProps, isFirstRender);
     }
 
-    if(isMountRender){
+    if(isFirstRender){
       _this.componentDidMount();
     }
-    _this.componentDidUpdate(isMountRender);
+    _this.componentDidUpdate(isFirstRender);
+
+    _this.__isFirstRender = false;
 
     return _this;
   }
@@ -119,7 +121,7 @@ export default class Component {
     _this.props = null;
     _this.prevProps = null;
     _this.state = {};
-    _this.__isMountRender = true;
+    _this.__isFirstRender = true;
     return _this;
   }
 }

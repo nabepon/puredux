@@ -12,7 +12,7 @@ export function mapDispatchToActions(dispatch, actions){
   return ret;
 }
 
-export function shouldComponentUpdate(objA, objB){
+export function shallowCompare(objA, objB){
   return !recurseEqual(objA, objB, 1);
 }
 
