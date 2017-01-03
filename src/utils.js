@@ -1,12 +1,13 @@
 const ObjectKeys = Object.keys;
 
-export function mapDispatchToActions(dispatch, actions){
+export function bindActionCreators(dispatch, dispatcher, actions){
   const ret = {};
   ObjectKeys(actions).map((key)=>{
     if (typeof actions[key] === 'function') {
-      ret[key] = function(){
-        dispatch(actions[key].apply(null, arguments));
-      };
+      ret[key] =
+        dispatch ? function(){ return dispatch(actions[key].apply(null, arguments)); }
+        : dispatcher ? dispatcher(actions[key])
+        : actions[key];
     }
   });
   return ret;
@@ -69,10 +70,15 @@ export function recurseObject(obj, checkObj, iteratee){
   return obj;
 }
 
-export function swapElement(selfEl, selector, el) {
-  const target = selfEl.querySelector(selector);
+export function swapElement(container, selector, el) {
+  const target = container.querySelector(selector);
   if(target) {
     target.parentNode.insertBefore(el, target);
-    selfEl.removeChild(target);
+    container.removeChild(target);
   }
 }
+
+export function hasClass(event, name){
+  return event.target.classList.contains(name);
+}
+

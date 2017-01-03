@@ -28,7 +28,6 @@
     "no-unexpected-multiline": 2,
 
     // Best Practices
-    "no-invalid-this": 2,
     "no-useless-call": 2,
     "radix": 2,
 
@@ -52,6 +51,5 @@
     "generator-star-spacing": [2, "after"],
     "no-class-assign": 2,
     "no-this-before-super": 2,
-    "prefer-spread": 2
   }
 }

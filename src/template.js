@@ -55,7 +55,7 @@ const matcher = new RegExp([
     (/<%([\s\S]+?)%>/g || noMatch).source
   ].join('|') + '|$', 'g');
 
-export default function createTemplate(text) {
+export default function template(text) {
   let index = 0;
   let source = "__p+='";
   text.replace(matcher, function (match, escape, interpolate, evaluate, offset) {

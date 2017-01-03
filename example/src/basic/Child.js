@@ -1,4 +1,4 @@
-import * as Puredux from '../../src';
+import * as Puredux from '../../../src';
 
 export default class Child extends Puredux.Component {
 
@@ -9,9 +9,9 @@ export default class Child extends Puredux.Component {
     this.createInstanceRef(Child);
   }
 
-  createTemplate() {
+  template() {
     return `
       <div class="count"><%= count %></div>
-    `
+    `;
   }
 }

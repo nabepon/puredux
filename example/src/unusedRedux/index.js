@@ -1,16 +1,29 @@
-import { createStore } from 'redux';
-import reducer from './reducer';
 import Component from './Component';
-import * as Puredux from '../../src';
-import page from 'page';
+import * as Puredux from '../../../src';
 
-class App {
+function Store(){
+  this.getState = ()=>{
+    return this.state;
+  };
+  this.state = {
+    counter: {
+      count: 0
+    }
+  };
+}
+
+export default class App {
   constructor(){
-    this.store = createStore(reducer, {});
-    Puredux.setConfig({dispatch: this.store.dispatch});
+    const _this = this;
+    this.store = new Store();
+    Puredux.setConfig({dispatcher: function(action){
+      return function(){
+        action.apply({getState: _this.store.getState.bind(_this)}, arguments);
+        _this.render();
+      }
+    }});
     this.el = document.querySelector('#app');
     this.component = {render: ()=>{}, unmount: ()=>{}};
-    this.unsubscribe = this.store.subscribe(()=>this.render());
   }
 
   changePage(pageComponent, renderPage) {

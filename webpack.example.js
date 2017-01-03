@@ -1,12 +1,14 @@
-'use strict'
+'use strict';
 var path = require('path');
 var webpack = require('webpack');
 var env = process.env.NODE_ENV;
 
 var config = {
   entry: {
-    vendor: ['redux', 'page'],
-    bundle: ['./src', './example/src/index.js'],
+    vendor: ['redux'],
+    minimum: ['./src', './example/src/minimum/index.js'],
+    basic: ['./src', './example/src/basic/index.js'],
+    unusedRedux: ['./src', './example/src/unusedRedux/index.js'],
   },
 
   output: {
@@ -39,13 +41,13 @@ var config = {
 };
 
 if(env === 'server') {
+  config.output.filename = '[name].js';
+  config.devtool = 'source-map';
   config.devServer = {
     contentBase: 'example',
     port: 3000
   };
-  config.plugins.push(
-    new webpack.HotModuleReplacementPlugin()
-  );
+  config.plugins.push(new webpack.HotModuleReplacementPlugin());
 }
 
 if(env === 'development') {
