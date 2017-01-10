@@ -28,6 +28,10 @@ jQueryから最新のWeb開発へ移行できない理由は、**あまりにも
 MVCからReactiveプログラミングへ移行したいが移行できずにくすぶっている、  
 そんな開発者にPureduxが助けになれればと思っています。
 
+## Installation
+```
+npm install --save puredux
+```
 
 ## Usage
 
