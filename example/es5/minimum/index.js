@@ -2,7 +2,9 @@
 var Component = Puredux.Component.extend({
   initialize: function(){
     this.Actions = {
-      increment: ()=>({type: 'INCREMENT'})
+      increment: function(){
+        return {type: 'INCREMENT'};
+      }
     };
   },
   template: function() {
@@ -33,7 +35,7 @@ Puredux.setConfig({dispatch: store.dispatch});
 
 // storeをsubscribeしてレンダリングされるようにする
 var component = new Component();
-store.subscribe(()=>component.render(store.getState()));
+store.subscribe(function(){ component.render(store.getState()) });
 
 // コンポーネントの初回レンダリングを行う
 component.render(store.getState());
