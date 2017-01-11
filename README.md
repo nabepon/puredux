@@ -1,7 +1,7 @@
 ## Overview
 Reactライク、7kb、ReduxのためのView。  
 Reduxを使うには「stateが更新されたら、viewを更新する」この仕組みがあれば十分です。  
-より純粋に、よりVanilla JSに近づいたReduxプロジェクトを始める。  
+より純粋に、ES5でもReduxプロジェクトを始めることができる。  
 Pureduxは、この達成のために作りました。  
 
 JSXやVirtualDOM、複雑なコンパイラ、巨大なランタイムは不要です。  

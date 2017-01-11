@@ -44,11 +44,12 @@ var Component = Puredux.Component.extend({
   },
 
   render: function(props) {
+    this.renderTemplate(props);
     this.children.child.render(props);
     for(var i in this.children.list){
       this.children.list[i].render(props);
     }
-    this.renderTemplate(props).replaceChildren();
+    this.replaceChildren();
   },
 
   template: function() {
