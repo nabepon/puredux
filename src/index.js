@@ -1,6 +1,6 @@
 import Component from './Component';
 import setConfig from './setConfig';
-import { shallowCompare, recurseEqual, recurseObject, swapElement, hasClass } from './utils';
+import { shallowCompare, recurseEqual, recurseObject, replaceChild, hasClass } from './utils';
 
 export {
   Component,
@@ -8,6 +8,6 @@ export {
   shallowCompare,
   recurseEqual,
   recurseObject,
-  swapElement,
+  replaceChild,
   hasClass
 };

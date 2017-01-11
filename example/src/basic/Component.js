@@ -26,10 +26,9 @@ export default class Component extends Puredux.Component {
 
   render(props) {
     this.renderTemplate(props);
-    this.$('.child-container').appendChild( this.children.child.render(props).el );
-    this.children.list.map(item => {
-      this.$('.child-container').appendChild( item.render(props).el );
-    });
+    this.children.child.render(props);
+    this.children.list.map(item => item.render(props));
+    this.replaceChildren();
   }
 
   template() {
@@ -37,7 +36,10 @@ export default class Component extends Puredux.Component {
       <div class="count"><%= count %></div>
       <button class="js-increment">increment</button>
       <button class="js-decrement">decrement</button>
-      <div class="child-container"></div>
+      <i data-replace="child"></i>
+      <% for(var i=0; i<5; i++){ %>
+        <i data-replace="list[<%- i %>]"></i>
+      <% } %>
     `;
   }
 

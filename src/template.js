@@ -72,5 +72,14 @@ export default function template(text) {
     return match;
   });
   source = "var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};\nwith(obj||{}){\n" + source + "';\n}\nreturn __p;\n";
-  return new Function('obj', source);
+
+  try {
+    const _render = new Function('obj', '_escape', source);
+    return function(data) {
+      return _render.call(this, data, _escape);
+    };
+  } catch (e) {
+    e.source = source;
+    throw e;
+  }
 }

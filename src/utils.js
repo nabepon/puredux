@@ -70,11 +70,10 @@ export function recurseObject(obj, checkObj, iteratee){
   return obj;
 }
 
-export function swapElement(container, selector, el) {
+export function replaceChild(container, selector, el) {
   const target = container.querySelector(selector);
   if(target) {
-    target.parentNode.insertBefore(el, target);
-    container.removeChild(target);
+    container.replaceChild(el, target);
   }
 }
 

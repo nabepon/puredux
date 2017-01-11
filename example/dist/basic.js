@@ -256,18 +256,17 @@ webpackJsonp([0],{
 	  }, {
 	    key: 'render',
 	    value: function render(props) {
-	      var _this2 = this;
-	
 	      this.renderTemplate(props);
-	      this.$('.child-container').appendChild(this.children.child.render(props).el);
+	      this.children.child.render(props);
 	      this.children.list.map(function (item) {
-	        _this2.$('.child-container').appendChild(item.render(props).el);
+	        return item.render(props);
 	      });
+	      this.replaceChildren();
 	    }
 	  }, {
 	    key: 'template',
 	    value: function template() {
-	      return '\n      <div class="count"><%= count %></div>\n      <button class="js-increment">increment</button>\n      <button class="js-decrement">decrement</button>\n      <div class="child-container"></div>\n    ';
+	      return '\n      <div class="count"><%= count %></div>\n      <button class="js-increment">increment</button>\n      <button class="js-decrement">decrement</button>\n      <i data-replace="child"></i>\n      <% for(var i=0; i<5; i++){ %>\n        <i data-replace="list[<%- i %>]"></i>\n      <% } %>\n    ';
 	    }
 	  }]);
 	

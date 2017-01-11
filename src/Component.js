@@ -120,6 +120,18 @@ export default class Component {
     return this;
   }
 
+  // this.childrenとdata-replace要素を入れ替えます。
+  replaceChildren(){
+    const replaceList = this.el.querySelectorAll('[data-replace]');
+    for(let i=0; i<replaceList.length; i++){
+      const target = replaceList[i];
+      const child = new Function(`return this.children.${target.dataset.replace}`).bind(this)();
+      if(child){
+        this.el.replaceChild(child.el, target);
+      }
+    }
+  }
+
   // querySelectorのエイリアス。
   // this.$(selector) のように使います。
   $(selector){

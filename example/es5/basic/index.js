@@ -44,11 +44,11 @@ var Component = Puredux.Component.extend({
   },
 
   render: function(props) {
-    this.renderTemplate(props);
-    this.$('.child-container').appendChild( this.children.child.render(props).el );
+    this.children.child.render(props);
     for(var i in this.children.list){
-      this.$('.child-container').appendChild( this.children.list[i].render(props).el );
+      this.children.list[i].render(props);
     }
+    this.renderTemplate(props).replaceChildren();
   },
 
   template: function() {
@@ -56,7 +56,10 @@ var Component = Puredux.Component.extend({
       <div class="count"><%= count %></div>\
       <button class="js-increment">increment</button>\
       <button class="js-decrement">decrement</button>\
-      <div class="child-container"></div>\
+      <i data-replace="child"></i>\
+      <% for(var i=0; i<5; i++){ %>\
+        <i data-replace="list[<%- i %>]"></i>\
+      <% } %>\
     ';
   },
 });

@@ -110,7 +110,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.hasClass = exports.swapElement = exports.recurseObject = exports.recurseEqual = exports.shallowCompare = exports.setConfig = exports.Component = undefined;
+	exports.hasClass = exports.replaceChild = exports.recurseObject = exports.recurseEqual = exports.shallowCompare = exports.setConfig = exports.Component = undefined;
 	
 	var _Component = __webpack_require__(2);
 	
@@ -129,7 +129,7 @@
 	exports.shallowCompare = _utils.shallowCompare;
 	exports.recurseEqual = _utils.recurseEqual;
 	exports.recurseObject = _utils.recurseObject;
-	exports.swapElement = _utils.swapElement;
+	exports.replaceChild = _utils.replaceChild;
 	exports.hasClass = _utils.hasClass;
 
 /***/ },
@@ -317,6 +317,21 @@
 	      return this;
 	    }
 	
+	    // this.childrenとdata-replace要素を入れ替えます。
+	
+	  }, {
+	    key: 'replaceChildren',
+	    value: function replaceChildren() {
+	      var replaceList = this.el.querySelectorAll('[data-replace]');
+	      for (var i = 0; i < replaceList.length; i++) {
+	        var target = replaceList[i];
+	        var child = new Function('return this.children.' + target.dataset.replace).bind(this)();
+	        if (child) {
+	          this.el.replaceChild(child.el, target);
+	        }
+	      }
+	    }
+	
 	    // querySelectorのエイリアス。
 	    // this.$(selector) のように使います。
 	
@@ -441,6 +456,9 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+	
 	exports['default'] = template;
 	/**
 	 * Modified template method from https://github.com/jashkenas/underscore/blob/master/underscore.js
@@ -512,7 +530,22 @@
 	    return match;
 	  });
 	  source = "var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};\nwith(obj||{}){\n" + source + "';\n}\nreturn __p;\n";
-	  return new Function('obj', source);
+	
+	  try {
+	    var _ret = function () {
+	      var _render = new Function('obj', '_escape', source);
+	      return {
+	        v: function v(data) {
+	          return _render.call(this, data, _escape);
+	        }
+	      };
+	    }();
+	
+	    if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
+	  } catch (e) {
+	    e.source = source;
+	    throw e;
+	  }
 	}
 
 /***/ },
@@ -531,7 +564,7 @@
 	exports.shallowCompare = shallowCompare;
 	exports.recurseEqual = recurseEqual;
 	exports.recurseObject = recurseObject;
-	exports.swapElement = swapElement;
+	exports.replaceChild = replaceChild;
 	exports.hasClass = hasClass;
 	var ObjectKeys = Object.keys;
 	
@@ -603,11 +636,10 @@
 	  return obj;
 	}
 	
-	function swapElement(container, selector, el) {
+	function replaceChild(container, selector, el) {
 	  var target = container.querySelector(selector);
 	  if (target) {
-	    target.parentNode.insertBefore(el, target);
-	    container.removeChild(target);
+	    container.replaceChild(el, target);
 	  }
 	}
 	
